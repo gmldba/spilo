@@ -15,6 +15,18 @@ if [ "x$1" = "xinit" ]; then
     exec /usr/bin/dumb-init -c --rewrite 1:0 -- /bin/sh /launch.sh
 fi
 
+if [ -f /var/secret/azkey ]; then
+  export WABS_ACCESS_KEY="$(cat /var/secret/azkey)"
+  echo "export WABS_ACCESS_KEY=\"$(cat /var/secret/azkey)\"" >> ~/.bash_profile
+  echo "export WABS_ACCESS_KEY=\"$(cat /var/secret/azkey)\"" >> /home/postgres/.bash_profile
+else
+  echo "Secret not mounted"
+fi
+
+if [ -f ~/.bash_profile ]; then
+  source ~/.bash_profile
+fi
+
 mkdir -p "$PGLOG"
 
 ## Ensure all logfiles exist, most appliances will have
